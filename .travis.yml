@@ -3,4 +3,4 @@ mono: none
 dotnet: 2.0.0
 script:
    -  dotnet build BasicExample/BasicExample/BasicExample.csproj
-   -  dotnet build EntityFrameworkExample/EntityFrameworkExample.csproj
+   -  dotnet build EntityFrameworkExample/EntityFrameworkExample/EntityFrameworkExample.csproj
