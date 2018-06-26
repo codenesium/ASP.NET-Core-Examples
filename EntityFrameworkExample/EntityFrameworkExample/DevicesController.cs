@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 
 namespace EntityFrameworkExample
 {
-    [Route("api/values")]
-    public class ValuesController : Controller
+    [Route("api/devices")]
+    public class DevicesController : Controller
     {
         [HttpGet]
-        [Route("Devices")]
         public async virtual Task<IActionResult> All()
         {
             using (var context = new IOTContext())
