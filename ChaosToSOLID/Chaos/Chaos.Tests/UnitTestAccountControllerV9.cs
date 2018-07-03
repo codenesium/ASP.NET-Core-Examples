@@ -495,7 +495,9 @@ namespace Chaos.Tests
  * We introduced Fluent Validation to make testing easier. 
  * We wrote all of our tests including an integration test for the FBI service
  * 
- * 
+ * There is at least one big issue I still see with these tests. There is a lot of 
+ * repetitive setup code. I would take the time to build factories to build your default mocks and
+ * make the code as DRY as possible. 
  * 
  * 
  */

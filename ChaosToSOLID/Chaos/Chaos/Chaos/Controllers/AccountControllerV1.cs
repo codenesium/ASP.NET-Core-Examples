@@ -63,7 +63,7 @@ namespace Chaos.Controllers
 
         /// <summary>
         /// Create method that creates an account record. The method should validate that the account name isn't null and doesn't
-        /// a;ready exist.
+        /// already exist.
         /// 
         /// What's wrong with this method?
         /// The Entity Framework context isn't injected so there's not really a way to unit test it.
