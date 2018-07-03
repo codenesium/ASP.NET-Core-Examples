@@ -4,5 +4,5 @@ dotnet: 2.1
 script:
    -  dotnet build BasicExample/BasicExample/BasicExample.csproj
    -  dotnet build EntityFrameworkExample/EntityFrameworkExample/EntityFrameworkExample.csproj
-   -  dotnet build ChaosToSOLID\ChaosToSOLID.csproj
-   -  dotnet test ChaosToSOLID.Tests\ChaosToSOLID.Tests.csproj
+   -  dotnet build ChaosToSOLID\ChaosToSOLID\ChaosToSOLID.csproj
+   -  dotnet test ChaosToSOLID.Tests\ChaosToSOLID.Tests\ChaosToSOLID.Tests.csproj
