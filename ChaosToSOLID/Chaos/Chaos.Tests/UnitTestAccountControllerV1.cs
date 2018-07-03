@@ -47,11 +47,13 @@ namespace Chaos.Tests
 * and assume it's good.
 * We didn't verify that anything in the method actually got called. Someone could replace
 * the call to the database and just return a new object and this test would pass. 
-* Our DateCreated field isn't really being tested. How can we? The creste method calls
+* Our DateCreated field isn't really being tested. How can we? The create method calls
 * DateTime.Now. How can we get that value?
 * The customer id isn't the same in every test. Unit tests need to be deterministic. It's unlikely
 * to fail because this guid is different every test run but for more complex tests it leads to 
 * hard to replicate failures. 
+* 
+* Introduce NCrunch.
 */
     }
 }

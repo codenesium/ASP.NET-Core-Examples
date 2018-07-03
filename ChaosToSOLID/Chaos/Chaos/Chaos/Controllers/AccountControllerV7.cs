@@ -119,7 +119,7 @@ namespace Chaos.Controllers
                     return new ActionResultV7(false, new ValidationResultV7(false, "Unable to validate with FBI"));
                 }
 
-                var account = new Account2(0, model.Name, model.GlobalCustomerId, DateTime.Now, model.Token);
+                var account = new Account(0, model.Name, model.GlobalCustomerId, DateTime.Now, model.Token);
 
                 this.repository.Create(account);
 
@@ -133,7 +133,7 @@ namespace Chaos.Controllers
 
         public async Task<ActionResultV7> Get(int id)
         {
-            Account2 record = await this.repository.Find(id);
+            Account record = await this.repository.Find(id);
             if(record == null)
             {
                 return new ActionResultV7(false, new ValidationResultV7(false, "Record not found"));
@@ -214,9 +214,9 @@ namespace Chaos.Controllers
     {
         bool Exists(string name);
 
-        void Create(Account2 account);
+        void Create(Account account);
 
-        Task<Account2> Find(int id);
+        Task<Account> Find(int id);
     }
 
     public class AccountRepositoryV7 : IAccountRepositoryV7
@@ -232,15 +232,15 @@ namespace Chaos.Controllers
         {
             return this.context.Accounts.Any(x => x.Name == name);
         }
-        public void Create(Account2 account)
+        public void Create(Account account)
         {
-            this.context.Accounts2.Add(account);
+            this.context.Accounts.Add(account);
             context.SaveChanges();
         }
 
-        public async Task<Account2> Find(int id)
+        public async Task<Account> Find(int id)
         {
-           return await this.context.Accounts2.FirstOrDefaultAsync(x => x.Id == id);
+           return await this.context.Accounts.FirstOrDefaultAsync(x => x.Id == id);
         }
     }
     #endregion

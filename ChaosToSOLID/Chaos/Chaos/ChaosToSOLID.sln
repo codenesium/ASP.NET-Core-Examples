@@ -3,9 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chaos", "Chaos\Chaos.csproj", "{EED13D85-5ED2-433A-81F7-B0A33A7E56D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChaosToSOLID", "Chaos\ChaosToSOLID.csproj", "{EED13D85-5ED2-433A-81F7-B0A33A7E56D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chaos.Tests", "..\Chaos.Tests\Chaos.Tests.csproj", "{312BF07B-1C27-4405-9DFF-68C4BF62E4E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChaosToSOLID.Tests", "..\Chaos.Tests\ChaosToSOLID.Tests.csproj", "{312BF07B-1C27-4405-9DFF-68C4BF62E4E3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{44BE0714-9BC6-4F17-83C8-F2E6D5A9BE00}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

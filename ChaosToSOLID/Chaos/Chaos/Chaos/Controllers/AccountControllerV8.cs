@@ -132,12 +132,12 @@ namespace Chaos.Controllers
         private IAccountRepositoryV8 repository;
         private IFBIServiceV8 fbiService;
         private AccountRequestModelValidatorV8 modelValidator;
-        private IDateServicev8 dateService;
+        private IDateServiceV8 dateService;
         private IAccountMapperV8 mapper;
         public AccountServiceV8(IAccountRepositoryV8 repository, 
             AccountRequestModelValidatorV8 modelValidator, 
             IFBIServiceV8 fbiService, 
-            IDateServicev8 dateService,
+            IDateServiceV8 dateService,
             IAccountMapperV8 mapper)
         {
             this.repository = repository;
@@ -159,7 +159,7 @@ namespace Chaos.Controllers
                     return new ActionResultV8(false, new ValidationResultV8(false, "Unable to validate with FBI"));
                 }
 
-                Account2 account = this.mapper.MapRequestToEntity(model);
+                Account account = this.mapper.MapRequestToEntity(model);
 
                 this.repository.Create(account);
 
@@ -173,7 +173,7 @@ namespace Chaos.Controllers
 
         public async Task<ActionResultV8> Get(int id)
         {
-            Account2 record = await this.repository.Find(id);
+            Account record = await this.repository.Find(id);
             if (record == null)
             {
                 return new ActionResultV8(false, new ValidationResultV8(false, "Record not found"));
@@ -195,8 +195,8 @@ namespace Chaos.Controllers
 
     public interface IAccountMapperV8
     {
-        Account2 MapRequestToEntity(AccountRequestModelV8 model);
-        AccountResponseModelV8 MapEntityToResponse(Account2 entity);
+        Account MapRequestToEntity(AccountRequestModelV8 model);
+        AccountResponseModelV8 MapEntityToResponse(Account entity);
     }
 
     /// <summary>
@@ -205,12 +205,12 @@ namespace Chaos.Controllers
     /// </summary>
     public class AccountMapperV8 : IAccountMapperV8
     {
-        public Account2 MapRequestToEntity(AccountRequestModelV8 model)
+        public Account MapRequestToEntity(AccountRequestModelV8 model)
         {
-            return new Account2(model.Id, model.Name, model.GlobalCustomerId, model.DateCreated, model.Token);
+            return new Account(model.Id, model.Name, model.GlobalCustomerId, model.DateCreated, model.Token);
         }
 
-        public AccountResponseModelV8 MapEntityToResponse(Account2 entity)
+        public AccountResponseModelV8 MapEntityToResponse(Account entity)
         {
             return new AccountResponseModelV8(entity.Id,entity.Name, entity.GlobalCustomerId, entity.DateCreated);
         }
@@ -260,9 +260,9 @@ namespace Chaos.Controllers
     {
         bool Exists(string name);
 
-        void Create(Account2 account);
+        void Create(Account account);
 
-        Task<Account2> Find(int id);
+        Task<Account> Find(int id);
     }
 
     public class AccountRepositoryV8 : IAccountRepositoryV8
@@ -278,15 +278,15 @@ namespace Chaos.Controllers
         {
             return this.context.Accounts.Any(x => x.Name == name);
         }
-        public void Create(Account2 account)
+        public void Create(Account account)
         {
-            this.context.Accounts2.Add(account);
+            this.context.Accounts.Add(account);
             context.SaveChanges();
         }
 
-        public async Task<Account2> Find(int id)
+        public async Task<Account> Find(int id)
         {
-            return await this.context.Accounts2.FirstOrDefaultAsync(x => x.Id == id);
+            return await this.context.Accounts.FirstOrDefaultAsync(x => x.Id == id);
         }
     }
     #endregion
@@ -321,12 +321,12 @@ namespace Chaos.Controllers
     #endregion
 
     #region dateService
-    public interface IDateServicev8
+    public interface IDateServiceV8
     {
         DateTime Now();
     }
 
-    public class DateServicev8 : IDateServicev8
+    public class DateServiceV8 : IDateServiceV8
     {
         public DateTime Now()
         {
@@ -345,7 +345,7 @@ namespace Chaos.Controllers
  * We've created object mappers and injected those into our service.
  * We introduced fluent validation which makes managing our validators much easier
  * We created a date service so we can test date time things without a depenency on DateTime.Now
- * Our code is single responsibility now with clear separation of convert.
+ * Our code is single responsibility now with clear separation of concern.
  * 
  * 
  * 

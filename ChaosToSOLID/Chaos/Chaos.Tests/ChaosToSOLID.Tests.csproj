@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Chaos\Chaos\Chaos.csproj" />
+    <ProjectReference Include="..\Chaos\Chaos\ChaosToSOLID.csproj" />
   </ItemGroup>
 
   <ItemGroup>

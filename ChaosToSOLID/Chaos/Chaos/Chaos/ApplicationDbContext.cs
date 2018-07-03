@@ -33,7 +33,6 @@ namespace Chaos
         public DbSet<Account> Accounts { get; set; }
 
 
-        public DbSet<Account2> Accounts2 { get; set; }
     }
 
 }
