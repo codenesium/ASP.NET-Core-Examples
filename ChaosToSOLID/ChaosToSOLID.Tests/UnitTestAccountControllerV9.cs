@@ -453,7 +453,7 @@ namespace Chaos.Tests
             DateTime result = service.Now();
 
             //verify
-            result.Should().BeAfter(now);
+            result.Should().BeCloseTo(now, 1000);
         }
 
 

@@ -11,7 +11,7 @@ namespace Chaos.Tests
     public class UnitTestAccountControllerV2
     {
         [Fact]
-        public async void Test_Account_Create()
+        public void Test_Account_Create()
         {
 
             DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder();
@@ -57,7 +57,7 @@ namespace Chaos.Tests
 
 
         [Fact]
-        public async void Test_Account_Create_With_Validation()
+        public void Test_Account_Create_With_Validation()
         {
             //setup
             DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder();

@@ -144,7 +144,7 @@ namespace Chaos.Tests
         }
 
         [Fact]
-        public async void Test_Account_Model_Validator_Account_Exists()
+        public void Test_Account_Model_Validator_Account_Exists()
         {
             Mock<IAccountRepositoryV5> repositoryMock = new Mock<IAccountRepositoryV5>();
             repositoryMock.Setup(x => x.Exists(It.IsAny<string>())).Returns(true);
@@ -160,7 +160,7 @@ namespace Chaos.Tests
         }
 
         [Fact]
-        public async void Test_Account_Model_Validator_Account_Not_Exists()
+        public void Test_Account_Model_Validator_Account_Not_Exists()
         {
             Mock<IAccountRepositoryV5> repositoryMock = new Mock<IAccountRepositoryV5>();
             repositoryMock.Setup(x => x.Exists(It.IsAny<string>())).Returns(false);
@@ -177,8 +177,8 @@ namespace Chaos.Tests
 
 
         [Fact]
-        public async void Test_Account_Repository_Create()
-        {
+        public void Test_Account_Repository_Create()
+        { 
             DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder();
             optionsBuilder.UseInMemoryDatabase("test1");
             var context = new ApplicationDbContext(optionsBuilder.Options);
@@ -189,7 +189,7 @@ namespace Chaos.Tests
 
 
         [Fact]
-        public async void Test_Account_Repository_Exists_Record_Exists()
+        public void Test_Account_Repository_Exists_Record_Exists()
         {
             DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder();
             optionsBuilder.UseInMemoryDatabase("test1");
@@ -206,7 +206,7 @@ namespace Chaos.Tests
         }
 
         [Fact]
-        public async void Test_Account_Repository_Exists_Record_Not_Exists()
+        public void Test_Account_Repository_Exists_Record_Not_Exists()
         {
             DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder();
             optionsBuilder.UseInMemoryDatabase("test1");
