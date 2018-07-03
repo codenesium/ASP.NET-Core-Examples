@@ -16,17 +16,17 @@ namespace Chaos.Controllers
     [ApiController]
     public class AccountControllerV7 : ControllerBase
     {
-        AccountService service;
+        AccountServiceV7 service;
 
-        public AccountControllerV7(AccountService service)
+        public AccountControllerV7(AccountServiceV7 service)
         {
             this.service = service;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(AccountRequestModel model)
+        public async Task<IActionResult> Create(AccountRequestModelV7 model)
         {
-            ActionResult result = await this.service.Create(model);
+            ActionResultV7 result = await this.service.Create(model);
             if(result.Success)
             {
                 return this.Ok(result.Object);
@@ -40,7 +40,7 @@ namespace Chaos.Controllers
         [HttpGet]
         public async Task<IActionResult> Get (int id)
         {
-            ActionResult result = await this.service.Get(id);
+            ActionResultV7 result = await this.service.Get(id);
             if (result.Success)
             {
                 return this.Ok(result.Object);
@@ -54,7 +54,7 @@ namespace Chaos.Controllers
 
 
     #region models
-    public class AccountRequestModel
+    public class AccountRequestModelV7
     {
         public int Id { get; set; } // internal record identifier for this account
         public string Name { get; set; } // checking, saving, investment
@@ -63,7 +63,7 @@ namespace Chaos.Controllers
         public string Token { get; set; } // secret token. We never want to expose this.
     }
 
-    public class AccountResponseModel
+    public class AccountResponseModelV7
     {
         public int Id { get; set; } // internal record identifier for this account
         public string Name { get; set; } // checking, saving, investment
@@ -77,38 +77,38 @@ namespace Chaos.Controllers
     #region service
 
 
-    public class ActionResult
+    public class ActionResultV7
     {
         public bool Success { get; private set; }
 
         public object Object { get; private set; }
 
-        public ActionResult(bool success, object @object)
+        public ActionResultV7(bool success, object @object)
         {
             this.Success = success;
             this.Object = @object;
         }
 
-        public ActionResult(ValidationResultV7 result)
+        public ActionResultV7(ValidationResultV7 result)
         {
             this.Success = result.Success;
             this.Object = result.Message;
         }
     }
 
-    public class AccountService
+    public class AccountServiceV7
     {
         private IAccountRepositoryV7 repository;
         private IFBIServiceV7 fbiService;
         private IAccountModelValiatorV7 modelValidator;
-        public AccountService(IAccountRepositoryV7 repository, IAccountModelValiatorV7 modelValidator, IFBIServiceV7 fbiService)
+        public AccountServiceV7(IAccountRepositoryV7 repository, IAccountModelValiatorV7 modelValidator, IFBIServiceV7 fbiService)
         {
             this.repository = repository;
             this.fbiService = fbiService;
             this.modelValidator = modelValidator;
         }
 
-        public async Task<ActionResult> Create(AccountRequestModel model)
+        public async Task<ActionResultV7> Create(AccountRequestModelV7 model)
         {
             ValidationResultV7 result = this.modelValidator.Validate(model);
 
@@ -116,45 +116,38 @@ namespace Chaos.Controllers
             {
                 if (!await this.fbiService.VerifyWithFBI(model.GlobalCustomerId))
                 {
-                    return new ActionResult(false, new ValidationResultV7(false, "Unable to validate with FBI"));
+                    return new ActionResultV7(false, new ValidationResultV7(false, "Unable to validate with FBI"));
                 }
 
-                var account = new Account()
-                {
-                    DateCreated = DateTime.Now,
-                    GlobalCustomerId = model.GlobalCustomerId,
-                    Id = model.Id,
-                    Name = model.Name
-                    // what bug could possible be caused right here?
-                };
+                var account = new Account2(0, model.Name, model.GlobalCustomerId, DateTime.Now, model.Token);
 
                 this.repository.Create(account);
 
-                return new ActionResult(true, account);
+                return new ActionResultV7(true, account);
             }
             else
             {
-                return new ActionResult(result);
+                return new ActionResultV7(result);
             }
         }
 
-        public async Task<ActionResult> Get(int id)
+        public async Task<ActionResultV7> Get(int id)
         {
-            Account record = await this.repository.Find(id);
+            Account2 record = await this.repository.Find(id);
             if(record == null)
             {
-                return new ActionResult(false, new ValidationResultV7(false, "Record not found"));
+                return new ActionResultV7(false, new ValidationResultV7(false, "Record not found"));
             }
             else
             {
-                var response = new AccountResponseModel()
+                var response = new AccountResponseModelV7()
                 {
                     DateCreated = record.DateCreated,
                     GlobalCustomerId = record.GlobalCustomerId,
                     Id = record.Id,
                     Name = record.Name
                 };
-                return new ActionResult(true, response);
+                return new ActionResultV7(true, response);
             }
         }
 
@@ -183,7 +176,7 @@ namespace Chaos.Controllers
 
     public interface IAccountModelValiatorV7
     {
-        ValidationResultV7 Validate(AccountRequestModel account);
+        ValidationResultV7 Validate(AccountRequestModelV7 account);
     }
 
     public class AccountModelValiatorV7
@@ -221,9 +214,9 @@ namespace Chaos.Controllers
     {
         bool Exists(string name);
 
-        void Create(Account account);
+        void Create(Account2 account);
 
-        Task<Account> Find(int id);
+        Task<Account2> Find(int id);
     }
 
     public class AccountRepositoryV7 : IAccountRepositoryV7
@@ -239,15 +232,15 @@ namespace Chaos.Controllers
         {
             return this.context.Accounts.Any(x => x.Name == name);
         }
-        public void Create(Account account)
+        public void Create(Account2 account)
         {
-            this.context.Accounts.Add(account);
+            this.context.Accounts2.Add(account);
             context.SaveChanges();
         }
 
-        public async Task<Account> Find(int id)
+        public async Task<Account2> Find(int id)
         {
-           return await this.context.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+           return await this.context.Accounts2.FirstOrDefaultAsync(x => x.Id == id);
         }
     }
     #endregion
