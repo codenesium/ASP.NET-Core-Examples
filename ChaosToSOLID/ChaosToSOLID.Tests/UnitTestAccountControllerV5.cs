@@ -21,7 +21,7 @@ namespace Chaos.Tests
             Mock<IFBIServiceV5> fbiServiceMock = new Mock<IFBIServiceV5>();
 
             // all of our mocks are returning what they should for a successful request
-            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<Guid>())).Returns(Task.FromResult<bool>(true));
+            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<string>())).Returns(Task.FromResult<bool>(true));
             modelValidatorMock.Setup(x => x.Validate(It.IsAny<Account>())).Returns(new ValidationResultV5());
 
             //act
@@ -31,7 +31,7 @@ namespace Chaos.Tests
             //verify
             Assert.True((result as OkObjectResult).StatusCode == 200); // ok result
             modelValidatorMock.Verify(x => x.Validate(It.IsAny<Account>())); // verify the methods on our objects are actually called
-            fbiServiceMock.Verify(x => x.VerifyWithFBI(It.IsAny<Guid>()));
+            fbiServiceMock.Verify(x => x.VerifyWithFBI(It.IsAny<string>()));
         }
 
 
@@ -44,7 +44,7 @@ namespace Chaos.Tests
             Mock<IFBIServiceV5> fbiServiceMock = new Mock<IFBIServiceV5>();
 
             // all of our mocks are returning what they should for a successful request
-            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<Guid>())).Returns(Task.FromResult<bool>(true));
+            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<string>())).Returns(Task.FromResult<bool>(true));
             repositoryMock.Setup(x => x.Create(It.IsAny<Account>()));
             modelValidatorMock.Setup(x => x.Validate(It.IsAny<Account>())).Returns(new ValidationResultV5(false, "error"));
 
@@ -66,7 +66,7 @@ namespace Chaos.Tests
             Mock<IFBIServiceV5> fbiServiceMock = new Mock<IFBIServiceV5>();
 
             // all of our mocks are returning what they should for a successful request
-            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<Guid>())).Returns(Task.FromResult<bool>(false));
+            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<string>())).Returns(Task.FromResult<bool>(false));
             repositoryMock.Setup(x => x.Create(It.IsAny<Account>()));
             modelValidatorMock.Setup(x => x.Validate(It.IsAny<Account>())).Returns(new ValidationResultV5());
 
@@ -87,7 +87,7 @@ namespace Chaos.Tests
             AccountModelValiatorV5 valiator = new AccountModelValiatorV5(repositoryMock.Object);
             Account account = new Account();
             account.DateCreated = DateTime.Now;
-            account.GlobalCustomerId = Guid.NewGuid();
+            account.SSN = "000-05-1120";
             account.Name = string.Empty;
             ValidationResultV5 result = valiator.Validate(account);
 
@@ -103,7 +103,7 @@ namespace Chaos.Tests
             AccountModelValiatorV5 valiator = new AccountModelValiatorV5(repositoryMock.Object);
             Account account = new Account();
             account.DateCreated = DateTime.Now;
-            account.GlobalCustomerId = Guid.NewGuid();
+            account.SSN = "000-05-1120";
             account.Name = "Test";
             ValidationResultV5 result = valiator.Validate(account);
 
@@ -119,7 +119,7 @@ namespace Chaos.Tests
             AccountModelValiatorV5 valiator = new AccountModelValiatorV5(repositoryMock.Object);
             Account account = new Account();
             account.DateCreated = DateTime.Now;
-            account.GlobalCustomerId = Guid.Empty;
+            account.SSN = default(string);
             account.Name = "test";
             ValidationResultV5 result = valiator.Validate(account);
 
@@ -135,7 +135,7 @@ namespace Chaos.Tests
             AccountModelValiatorV5 valiator = new AccountModelValiatorV5(repositoryMock.Object);
             Account account = new Account();
             account.DateCreated = DateTime.Now;
-            account.GlobalCustomerId = Guid.NewGuid();
+            account.SSN = "000-05-1120";
             account.Name = "test";
             ValidationResultV5 result = valiator.Validate(account);
 
@@ -151,7 +151,7 @@ namespace Chaos.Tests
             AccountModelValiatorV5 valiator = new AccountModelValiatorV5(repositoryMock.Object);
             Account account = new Account();
             account.DateCreated = DateTime.Now;
-            account.GlobalCustomerId = Guid.NewGuid();
+            account.SSN = "000-05-1120";
             account.Name = "test";
             ValidationResultV5 result = valiator.Validate(account);
 
@@ -167,7 +167,7 @@ namespace Chaos.Tests
             AccountModelValiatorV5 valiator = new AccountModelValiatorV5(repositoryMock.Object);
             Account account = new Account();
             account.DateCreated = DateTime.Now;
-            account.GlobalCustomerId = Guid.NewGuid();
+            account.SSN = "000-05-1120";
             account.Name = "test";
             ValidationResultV5 result = valiator.Validate(account);
 

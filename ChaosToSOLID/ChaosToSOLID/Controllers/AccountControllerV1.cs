@@ -30,7 +30,7 @@ namespace Chaos.Controllers
                 return new StatusCodeResult((int)System.Net.HttpStatusCode.UnprocessableEntity);
             }
 
-            if (account.GlobalCustomerId == Guid.Empty)
+            if (string.IsNullOrWhiteSpace(account.SSN))
             {
                 return new StatusCodeResult((int)System.Net.HttpStatusCode.UnprocessableEntity);
             }

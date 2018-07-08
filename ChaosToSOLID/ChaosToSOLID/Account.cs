@@ -11,18 +11,18 @@ namespace Chaos
     {
         public int Id { get; set; } // internal record identifier for this account
         public string Name { get; set; } // checking, saving, investment
-        public Guid GlobalCustomerId { get; set; } // a unique customer id used to globally track a person's bank accounts
+        public string SSN { get; set; } // a unique customer id used to globally track a person's bank accounts
         public DateTime DateCreated { get; set; } // when the account was created
         public string Token { get; set; } // secret token. We never want to expose this.
 
         public Account()
         {
         }
-        public Account(int id, string name, Guid globalCustomerId, DateTime dateCreated, string token)
+        public Account(int id, string name, string ssn, DateTime dateCreated, string token)
         {
             this.Id = id;
             this.Name = name;
-            this.GlobalCustomerId = globalCustomerId;
+            this.SSN = ssn;
             this.DateCreated = dateCreated;
             this.Token = token;
         }

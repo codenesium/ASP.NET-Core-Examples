@@ -12,14 +12,13 @@ namespace Chaos.Tests
         {
             AccountControllerV1 controller = new AccountControllerV1();
 
-            Guid customerId = Guid.NewGuid();
-            IActionResult result = controller.Create(new Account() { Id = 1, Name = "Test",GlobalCustomerId=customerId });
+            IActionResult result = controller.Create(new Account() { Id = 1, Name = "Test",SSN= "000-05-1120" });
             Assert.True(result is OkObjectResult);
             var response = (result as OkObjectResult);
             var responseItem = response.Value as Account;
             Assert.True(responseItem.Id == 1);
             Assert.True(responseItem.Name == "Test");
-            Assert.True(responseItem.GlobalCustomerId == customerId);
+            Assert.True(responseItem.SSN == "000-05-1120");
             Assert.True(responseItem.DateCreated != null);
         }
 

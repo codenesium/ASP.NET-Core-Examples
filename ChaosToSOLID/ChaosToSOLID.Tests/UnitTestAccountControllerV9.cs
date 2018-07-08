@@ -97,7 +97,7 @@ namespace Chaos.Tests
             Mock<IFBIServiceV9> fbiServiceMock = new Mock<IFBIServiceV9>();
 
             modelValidatorMock.Setup(x => x.Validate(It.IsAny<AccountRequestModelV9>())).Returns(new FluentValidation.Results.ValidationResult());
-            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<string>())).Returns(Task.FromResult(true));
             mapperMock.Setup(x => x.MapEntityToResponse(It.IsAny<Account>())).Returns(new AccountResponseModelV9());
             repository.Setup(x => x.Create(It.IsAny<Account>()));
 
@@ -112,7 +112,7 @@ namespace Chaos.Tests
             modelValidatorMock.Verify(x => x.Validate(It.IsAny<AccountRequestModelV9>()));
             mapperMock.Verify(x => x.MapEntityToResponse(It.IsAny<Account>()));
             repository.Verify(x => x.Create(It.IsAny<Account>()));
-            fbiServiceMock.Verify(x => x.VerifyWithFBI(It.IsAny<Guid>()));
+            fbiServiceMock.Verify(x => x.VerifyWithFBI(It.IsAny<string>()));
             dateServiceMock.Verify(x => x.Now());
         }
 
@@ -127,7 +127,7 @@ namespace Chaos.Tests
             Mock<IFBIServiceV9> fbiServiceMock = new Mock<IFBIServiceV9>();
 
             modelValidatorMock.Setup(x => x.Validate(It.IsAny<AccountRequestModelV9>())).Returns(new ValidationResult(new List<ValidationFailure>() { new ValidationFailure(default(string), default(string)) }));
-            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<string>())).Returns(Task.FromResult(true));
             mapperMock.Setup(x => x.MapEntityToResponse(It.IsAny<Account>())).Returns(new AccountResponseModelV9());
             repository.Setup(x => x.Create(It.IsAny<Account>()));
 
@@ -153,7 +153,7 @@ namespace Chaos.Tests
             Mock<IFBIServiceV9> fbiServiceMock = new Mock<IFBIServiceV9>();
 
             modelValidatorMock.Setup(x => x.Validate(It.IsAny<AccountRequestModelV9>())).Returns(new FluentValidation.Results.ValidationResult());
-            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<string>())).Returns(Task.FromResult(false));
             mapperMock.Setup(x => x.MapEntityToResponse(It.IsAny<Account>())).Returns(new AccountResponseModelV9());
             repository.Setup(x => x.Create(It.IsAny<Account>()));
 
@@ -165,7 +165,7 @@ namespace Chaos.Tests
             //verify
             result.Success.Should().BeFalse();
             result.Object.Should().BeOfType<ValidationResultV9>();
-            fbiServiceMock.Verify(x => x.VerifyWithFBI(It.IsAny<Guid>()));
+            fbiServiceMock.Verify(x => x.VerifyWithFBI(It.IsAny<string>()));
         }
 
         [Fact]
@@ -179,7 +179,7 @@ namespace Chaos.Tests
             Mock<IFBIServiceV9> fbiServiceMock = new Mock<IFBIServiceV9>();
 
             modelValidatorMock.Setup(x => x.Validate(It.IsAny<AccountRequestModelV9>())).Returns(new ValidationResult());
-            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<string>())).Returns(Task.FromResult(true));
             mapperMock.Setup(x => x.MapEntityToResponse(It.IsAny<Account>())).Returns(new AccountResponseModelV9());
             repository.Setup(x => x.Find(It.IsAny<int>())).Returns(Task.FromResult<Account>(new Account()));
 
@@ -206,7 +206,7 @@ namespace Chaos.Tests
             Mock<IFBIServiceV9> fbiServiceMock = new Mock<IFBIServiceV9>();
 
             modelValidatorMock.Setup(x => x.Validate(It.IsAny<AccountRequestModelV9>())).Returns(new ValidationResult());
-            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<string>())).Returns(Task.FromResult(true));
             mapperMock.Setup(x => x.MapEntityToResponse(It.IsAny<Account>())).Returns(new AccountResponseModelV9());
             repository.Setup(x => x.Find(It.IsAny<int>())).Returns(Task.FromResult<Account>(null));
 
@@ -226,7 +226,7 @@ namespace Chaos.Tests
             //setup
             IAccountMapperV9 mapper = new AccountMapperV9();
 
-            var request = new AccountRequestModelV9(1, "A", Guid.Parse("80e17e85-3f6a-4f79-a684-a895ed0ca41a"), DateTime.Parse("7/3/2018 4:41:42 PM"), "A");
+            var request = new AccountRequestModelV9(1, "A", "000-05-1120", DateTime.Parse("7/3/2018 4:41:42 PM"), "A");
 
             //act
             Account entity = mapper.MapRequestToEntity(request);
@@ -235,7 +235,7 @@ namespace Chaos.Tests
             entity.DateCreated.Should().Be(DateTime.Parse("7/3/2018 4:41:42 PM"));
             entity.Id.Should().Be(1);
             entity.Name.Should().Be("A");
-            entity.GlobalCustomerId.Should().Be(Guid.Parse("80e17e85-3f6a-4f79-a684-a895ed0ca41a"));
+            entity.SSN.Should().Be("000-05-1120");
             entity.Token.Should().Be("A");
         }
 
@@ -245,7 +245,7 @@ namespace Chaos.Tests
             //setup
             IAccountMapperV9 mapper = new AccountMapperV9();
 
-            var entity = new Account(1, "A", Guid.Parse("80e17e85-3f6a-4f79-a684-a895ed0ca41a"), DateTime.Parse("7/3/2018 4:41:42 PM"), "A");
+            var entity = new Account(1, "A", "000-05-1120", DateTime.Parse("7 /3/2018 4:41:42 PM"), "A");
 
             //act
             AccountResponseModelV9 response = mapper.MapEntityToResponse(entity);
@@ -254,7 +254,7 @@ namespace Chaos.Tests
             response.DateCreated.Should().Be(DateTime.Parse("7/3/2018 4:41:42 PM"));
             response.Id.Should().Be(1);
             response.Name.Should().Be("A");
-            response.GlobalCustomerId.Should().Be(Guid.Parse("80e17e85-3f6a-4f79-a684-a895ed0ca41a"));
+            response.SSN.Should().Be("000-05-1120");
         }
 
         [Fact]
@@ -316,7 +316,7 @@ namespace Chaos.Tests
             AccountRequestModelValidatorV9 validator = new AccountRequestModelValidatorV9(repositoryMock.Object);
 
             //act and verify
-            validator.ShouldNotHaveValidationErrorFor(x => x.GlobalCustomerId, Guid.Parse("80e17e85-3f6a-4f79-a684-a895ed0ca41a"));
+            validator.ShouldNotHaveValidationErrorFor(x => x.SSN, "000-05-1120");
         }
 
         [Fact]
@@ -328,7 +328,7 @@ namespace Chaos.Tests
             AccountRequestModelValidatorV9 validator = new AccountRequestModelValidatorV9(repositoryMock.Object);
 
             //act and verify
-            validator.ShouldHaveValidationErrorFor(x => x.GlobalCustomerId, Guid.Empty);
+            validator.ShouldHaveValidationErrorFor(x => x.SSN, string.Empty);
         }
 
         [Fact]
@@ -382,7 +382,7 @@ namespace Chaos.Tests
             optionsBuilder.UseInMemoryDatabase("test1");
             var context = new ApplicationDbContext(optionsBuilder.Options);
             IAccountRepositoryV9 repository = new AccountRepositoryV9(context);
-            context.Accounts.Add(new Account(default(int), "test", default(Guid), default(DateTime), default(string)));
+            context.Accounts.Add(new Account(default(int), "test", default(string), default(DateTime), default(string)));
             context.SaveChanges();
 
             //act
@@ -415,7 +415,7 @@ namespace Chaos.Tests
             optionsBuilder.UseInMemoryDatabase("test1");
             var context = new ApplicationDbContext(optionsBuilder.Options);
             IAccountRepositoryV9 repository = new AccountRepositoryV9(context);
-            context.Accounts.Add(new Account(1, default(string), default(Guid), default(DateTime), default(string)));
+            context.Accounts.Add(new Account(1, default(string), default(string), default(DateTime), default(string)));
             context.SaveChanges();
 
             //act
@@ -464,7 +464,7 @@ namespace Chaos.Tests
             IFBIServiceV9 service = new FBIServiceV9("https://jsonplaceholder.typicode.com/posts/1");
 
             //act
-            bool result = await service.VerifyWithFBI(default(Guid));
+            bool result = await service.VerifyWithFBI(default(string));
 
             //verify
             result.Should().BeTrue();
@@ -477,7 +477,7 @@ namespace Chaos.Tests
             IFBIServiceV9 service = new FBIServiceV9("https://jsonplaceholder.typicode.com/posts/fail");
 
             //act
-            bool result = await service.VerifyWithFBI(default(Guid));
+            bool result = await service.VerifyWithFBI(default(string));
 
             //verify
             result.Should().BeFalse();

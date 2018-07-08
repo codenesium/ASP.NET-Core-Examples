@@ -34,12 +34,12 @@ namespace Chaos.Controllers
                 return new StatusCodeResult((int)System.Net.HttpStatusCode.UnprocessableEntity);
             }
 
-            if (account.GlobalCustomerId == Guid.Empty)
+            if (string.IsNullOrWhiteSpace(account.SSN))
             {
                 return new StatusCodeResult((int)System.Net.HttpStatusCode.UnprocessableEntity);
             }
 
-            if (!(await this.fbiService.VerifyWithFBI(account.GlobalCustomerId)))
+            if (!(await this.fbiService.VerifyWithFBI(account.SSN)))
             {
                 return new StatusCodeResult((int)System.Net.HttpStatusCode.BadRequest);
             }
@@ -52,12 +52,12 @@ namespace Chaos.Controllers
 
     public interface IFBIService
     {
-        Task<bool> VerifyWithFBI(Guid customerId);
+        Task<bool> VerifyWithFBI(string ssn);
     }
 
     public class FBIService : IFBIService
     {
-        public async Task<bool> VerifyWithFBI(Guid customerId)
+        public async Task<bool> VerifyWithFBI(string ssn)
         {
             HttpClient client = new HttpClient();
             string response = await client.GetStringAsync("https://jsonplaceholder.typicode.com/posts/1");

@@ -111,13 +111,13 @@ namespace Chaos.Tests
         //}
 
         //[Fact]
-        //public void Test_ModelValidator_GlobalCustomerId_NotEmpty_Valid()
+        //public void Test_ModelValidator_SSN_NotEmpty_Valid()
         //{
         //    Assert.True(false);
         //}
 
         //[Fact]
-        //public void Test_ModelValidator_GlobalCustomerId_NotEmpty_Invalid()
+        //public void Test_ModelValidator_SSN_NotEmpty_Invalid()
         //{
         //    Assert.True(false);
         //}

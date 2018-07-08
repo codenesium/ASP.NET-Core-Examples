@@ -33,7 +33,7 @@ namespace Chaos.Controllers
 
             if (result.Success)
             {
-                if (!await this.fbiService.VerifyWithFBI(account.GlobalCustomerId))
+                if (!await this.fbiService.VerifyWithFBI(account.SSN))
                 {
                     return new StatusCodeResult((int)System.Net.HttpStatusCode.BadRequest);
                 }
@@ -107,7 +107,7 @@ namespace Chaos.Controllers
                 return new ValidationResultV6(false, "Account name already exists");
             }
 
-            if (account.GlobalCustomerId == Guid.Empty)
+            if (string.IsNullOrWhiteSpace(account.SSN))
             {
                 return new ValidationResultV6(false, "Customer id cannot be empty");
             }
@@ -156,7 +156,7 @@ namespace Chaos.Controllers
     #region fbiService
     public interface IFBIServiceV6
     {
-        Task<bool> VerifyWithFBI(Guid customerId);
+        Task<bool> VerifyWithFBI(string ssn);
     }
 
     public class FBIServiceV6 : IFBIServiceV6
@@ -167,7 +167,7 @@ namespace Chaos.Controllers
             this.client = client;
         }
 
-        public async Task<bool> VerifyWithFBI(Guid customerId)
+        public async Task<bool> VerifyWithFBI(string ssn)
         {
             string response = await this.client.GetStringAsync("https://jsonplaceholder.typicode.com/posts/1");
             if (!string.IsNullOrWhiteSpace(response))

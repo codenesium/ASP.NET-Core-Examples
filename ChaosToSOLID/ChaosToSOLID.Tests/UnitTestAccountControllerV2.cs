@@ -18,14 +18,14 @@ namespace Chaos.Tests
             optionsBuilder.UseInMemoryDatabase("test1");
             var context = new ApplicationDbContext(optionsBuilder.Options);
             AccountControllerV2 controller = new AccountControllerV2(context);
-            Guid customerId = Guid.NewGuid();
-            IActionResult result = controller.Create(new Account() { Id = 1, Name = "Checking", GlobalCustomerId = customerId });
+           
+            IActionResult result = controller.Create(new Account() { Id = 1, Name = "Checking", SSN = "000-05-1120" });
             Assert.True(result != null);
             Assert.True(context.Accounts.Count() == 1);
             Assert.True(context.Accounts.First().Id == 1);
             Assert.True(context.Accounts.First().Name == "Checking");
             Assert.True(context.Accounts.First().DateCreated != null);
-            Assert.True(context.Accounts.First().GlobalCustomerId == customerId);
+            Assert.True(context.Accounts.First().SSN == "000-05-1120");
         }
 
 /*
@@ -66,14 +66,13 @@ namespace Chaos.Tests
             AccountControllerV2 controller = new AccountControllerV2(context);
 
             //act
-            Guid customerId = Guid.NewGuid();
-            IActionResult result = controller.Create(new Account() { Id = 1, Name = "Checking", GlobalCustomerId=customerId });
+            IActionResult result = controller.Create(new Account() { Id = 1, Name = "Checking", SSN="000-05-1120" });
             Assert.True(result != null); // the result isn't null
             Assert.True(context.Accounts.Count() == 1); // the result has the count we expect
             Assert.True(context.Accounts.First().Id == 1); // the record has the id we expect
             Assert.True(context.Accounts.First().Name == "Checking"); // it has the right name
             Assert.True(context.Accounts.First().DateCreated != null); // we saved a date
-            Assert.True(context.Accounts.First().GlobalCustomerId == customerId);
+            Assert.True(context.Accounts.First().SSN == "000-05-1120");
             // test that creating a blank name returns a 422 code
             IActionResult result2 = controller.Create(new Account() { Id = 1, Name = "" });
             Assert.True((result2 as StatusCodeResult).StatusCode == 422);

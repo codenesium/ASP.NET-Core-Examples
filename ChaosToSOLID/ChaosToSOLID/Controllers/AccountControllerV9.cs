@@ -63,7 +63,7 @@ namespace Chaos.Controllers
     {
         public int Id { get; set; } // internal record identifier for this account
         public string Name { get; set; } // checking, saving, investment
-        public Guid GlobalCustomerId { get; set; } // a unique customer id used to globally track a person's bank accounts
+        public string SSN { get; set; } // a unique customer id used to globally track a person's bank accounts
         public DateTime DateCreated { get; set; } // when the account was created
         public string Token { get; set; } // secret token. We never want to expose this.
 
@@ -77,11 +77,11 @@ namespace Chaos.Controllers
             this.DateCreated = DateCreated;
         }
 
-        public AccountRequestModelV9(int id, string name, Guid globalCustomerId, DateTime dateCreated, string token)
+        public AccountRequestModelV9(int id, string name, string ssn, DateTime dateCreated, string token)
         {
             this.Id = id;
             this.Name = name;
-            this.GlobalCustomerId = globalCustomerId;
+            this.SSN = ssn;
             this.DateCreated = dateCreated;
             this.Token = token;
         }
@@ -91,7 +91,7 @@ namespace Chaos.Controllers
     {
         public int Id { get; private set; } // internal record identifier for this account
         public string Name { get; private set; } // checking, saving, investment
-        public Guid GlobalCustomerId { get; private set; } // a unique customer id used to globally track a person's bank accounts
+        public string SSN { get; private set; } // a unique customer id used to globally track a person's bank accounts
         public DateTime DateCreated { get; private set; } // when the account was created
 
         public AccountResponseModelV9()
@@ -99,11 +99,11 @@ namespace Chaos.Controllers
 
         }
 
-        public AccountResponseModelV9(int id, string name, Guid globalCustomerId, DateTime dateCreated)
+        public AccountResponseModelV9(int id, string name, string ssn, DateTime dateCreated)
         {
             this.Id = id;
             this.Name = name;
-            this.GlobalCustomerId = globalCustomerId;
+            this.SSN = ssn;
             this.DateCreated = dateCreated;
         }
     }
@@ -145,7 +145,7 @@ namespace Chaos.Controllers
 
             if (result.IsValid)
             {
-                if (!await this.fbiService.VerifyWithFBI(model.GlobalCustomerId))
+                if (!await this.fbiService.VerifyWithFBI(model.SSN))
                 {
                     return new ActionResultV9(false, new ValidationResultV9(false, "Unable to validate with FBI"));
                 }
@@ -225,12 +225,12 @@ namespace Chaos.Controllers
     {
         public Account MapRequestToEntity(AccountRequestModelV9 model)
         {
-            return new Account(model.Id, model.Name, model.GlobalCustomerId, model.DateCreated, model.Token);
+            return new Account(model.Id, model.Name, model.SSN, model.DateCreated, model.Token);
         }
 
         public AccountResponseModelV9 MapEntityToResponse(Account entity)
         {
-            return new AccountResponseModelV9(entity.Id,entity.Name, entity.GlobalCustomerId, entity.DateCreated);
+            return new AccountResponseModelV9(entity.Id,entity.Name, entity.SSN, entity.DateCreated);
         }
     }
 
@@ -250,7 +250,7 @@ namespace Chaos.Controllers
         {
             this.repository = repository;
             this.RuleFor(x => x.Name).NotEmpty();
-            this.RuleFor(x => x.GlobalCustomerId).NotEmpty();
+            this.RuleFor(x => x.SSN).NotEmpty();
             this.RuleFor(x => x.Token).NotEmpty();
             this.RuleFor(x => x.Name).Must(this.AccountValidated).WithMessage("Account already exists");
            
@@ -318,7 +318,7 @@ namespace Chaos.Controllers
     #region fbiService
     public interface IFBIServiceV9
     {
-        Task<bool> VerifyWithFBI(Guid customerId);
+        Task<bool> VerifyWithFBI(string ssn);
     }
 
     public class FBIServiceV9 : IFBIServiceV9
@@ -331,7 +331,7 @@ namespace Chaos.Controllers
             this.client = new HttpClient();
         }
 
-        public async Task<bool> VerifyWithFBI(Guid customerId)
+        public async Task<bool> VerifyWithFBI(string ssn)
         {
             var response = await this.client.GetAsync(this.url);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)

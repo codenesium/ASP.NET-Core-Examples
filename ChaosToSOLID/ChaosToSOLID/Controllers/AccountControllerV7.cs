@@ -58,7 +58,7 @@ namespace Chaos.Controllers
     {
         public int Id { get; set; } // internal record identifier for this account
         public string Name { get; set; } // checking, saving, investment
-        public Guid GlobalCustomerId { get; set; } // a unique customer id used to globally track a person's bank accounts
+        public string SSN { get; set; } // a unique customer id used to globally track a person's bank accounts
         public DateTime DateCreated { get; set; } // when the account was created
         public string Token { get; set; } // secret token. We never want to expose this.
     }
@@ -67,7 +67,7 @@ namespace Chaos.Controllers
     {
         public int Id { get; set; } // internal record identifier for this account
         public string Name { get; set; } // checking, saving, investment
-        public Guid GlobalCustomerId { get; set; } // a unique customer id used to globally track a person's bank accounts
+        public string SSN { get; set; } // a unique customer id used to globally track a person's bank accounts
         public DateTime DateCreated { get; set; } // when the account was created
 
     }
@@ -114,12 +114,12 @@ namespace Chaos.Controllers
 
             if (result.Success)
             {
-                if (!await this.fbiService.VerifyWithFBI(model.GlobalCustomerId))
+                if (!await this.fbiService.VerifyWithFBI(model.SSN))
                 {
                     return new ActionResultV7(false, new ValidationResultV7(false, "Unable to validate with FBI"));
                 }
 
-                var account = new Account(0, model.Name, model.GlobalCustomerId, DateTime.Now, model.Token);
+                var account = new Account(0, model.Name, model.SSN, DateTime.Now, model.Token);
 
                 this.repository.Create(account);
 
@@ -143,7 +143,7 @@ namespace Chaos.Controllers
                 var response = new AccountResponseModelV7()
                 {
                     DateCreated = record.DateCreated,
-                    GlobalCustomerId = record.GlobalCustomerId,
+                    SSN = record.SSN,
                     Id = record.Id,
                     Name = record.Name
                 };
@@ -199,7 +199,7 @@ namespace Chaos.Controllers
                 return new ValidationResultV7(false, "Account name already exists");
             }
 
-            if (account.GlobalCustomerId == Guid.Empty)
+            if (string.IsNullOrWhiteSpace(account.SSN))
             {
                 return new ValidationResultV7(false, "Customer id cannot be empty");
             }
@@ -248,7 +248,7 @@ namespace Chaos.Controllers
     #region fbiService
     public interface IFBIServiceV7
     {
-        Task<bool> VerifyWithFBI(Guid customerId);
+        Task<bool> VerifyWithFBI(string ssn);
     }
 
     public class FBIServiceV7 : IFBIServiceV7
@@ -259,7 +259,7 @@ namespace Chaos.Controllers
             this.client = client;
         }
 
-        public async Task<bool> VerifyWithFBI(Guid customerId)
+        public async Task<bool> VerifyWithFBI(string ssn)
         {
             string response = await this.client.GetStringAsync("https://jsonplaceholder.typicode.com/posts/1");
             if (!string.IsNullOrWhiteSpace(response))

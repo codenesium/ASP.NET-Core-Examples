@@ -23,14 +23,14 @@ namespace Chaos.Tests
             AccountControllerV4 controller = new AccountControllerV4(context, fbiService);
 
             //act
-            Guid customerId = Guid.NewGuid();
-            IActionResult result = await controller.Create(new Account() { Id = 1, Name = "Checking", GlobalCustomerId = customerId });
+           
+            IActionResult result = await controller.Create(new Account() { Id = 1, Name = "Checking", SSN = "000-05-1120" });
             Assert.True(result != null); // the result isn't null
             Assert.True(context.Accounts.Count() == 1); // the result has the count we expect
             Assert.True(context.Accounts.First().Id == 1); // the record has the id we expect
             Assert.True(context.Accounts.First().Name == "Checking"); // it has the right name
             Assert.True(context.Accounts.First().DateCreated != null); // we saved a date
-            Assert.True(context.Accounts.First().GlobalCustomerId == customerId);
+            Assert.True(context.Accounts.First().SSN == "000-05-1120");
             // test that creating a blank name returns a 422 code
             IActionResult result2 = await controller.Create(new Account() { Id = 1, Name = "" });
             Assert.True((result2 as StatusCodeResult).StatusCode == 422);
@@ -81,33 +81,32 @@ namespace Chaos.Tests
             FBIService fbiService = new FBIService();
 
             Mock<IFBIService> fbiServiceMock = new Mock<IFBIService>();
-            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<Guid>())).Returns(Task.FromResult<bool>(true));
+            fbiServiceMock.Setup(x => x.VerifyWithFBI(It.IsAny<string>())).Returns(Task.FromResult<bool>(true));
             AccountControllerV4 controller = new AccountControllerV4(context, fbiService);
 
             //act
-            Guid customerId = Guid.NewGuid();
-            IActionResult result = await controller.Create(new Account() { Id = 1, Name = "Checking", GlobalCustomerId = customerId });
+            IActionResult result = await controller.Create(new Account() { Id = 1, Name = "Checking", SSN = "000-05-1120" });
             Assert.True(result != null); // the result isn't null
             Assert.True(context.Accounts.Count() == 1); // the result has the count we expect
             Assert.True(context.Accounts.First().Id == 1); // the record has the id we expect
             Assert.True(context.Accounts.First().Name == "Checking"); // it has the right name
             Assert.True(context.Accounts.First().DateCreated != null); // we saved a date
-            Assert.True(context.Accounts.First().GlobalCustomerId == customerId);
+            Assert.True(context.Accounts.First().SSN == "000-05-1120");
             // test that creating a blank name returns a 422 code
-            IActionResult result2 = await controller.Create(new Account() { Id = 1, Name = "", GlobalCustomerId = customerId });
+            IActionResult result2 = await controller.Create(new Account() { Id = 1, Name = "", SSN = "000-05-1120" });
             Assert.True((result2 as StatusCodeResult).StatusCode == 422);
 
             // test that creating duplicate names returns 422
-            IActionResult resultUnique = await controller.Create(new Account() { Id = 2, Name = "Checking1", GlobalCustomerId = customerId });
-            IActionResult resultUniqueTest = await controller.Create(new Account() { Id = 3, Name = "Checking1", GlobalCustomerId = customerId });
+            IActionResult resultUnique = await controller.Create(new Account() { Id = 2, Name = "Checking1", SSN = "000-05-1120" });
+            IActionResult resultUniqueTest = await controller.Create(new Account() { Id = 3, Name = "Checking1", SSN = "000-05-1120" });
             Assert.True((result2 as StatusCodeResult).StatusCode == 422);
 
 
             // we're now able to test that if the fbi service returns false we handle it with a 400 response
             Mock<IFBIService> fbiServiceMock2 = new Mock<IFBIService>();
-            fbiServiceMock2.Setup(x => x.VerifyWithFBI(It.IsAny<Guid>())).Returns(Task.FromResult<bool>(false));
+            fbiServiceMock2.Setup(x => x.VerifyWithFBI(It.IsAny<string>())).Returns(Task.FromResult<bool>(false));
             AccountControllerV4 controller2 = new AccountControllerV4(context, fbiServiceMock2.Object);
-            IActionResult result3 = await controller2.Create(new Account() { Id = 4, Name = "CheckingNew", GlobalCustomerId = customerId });
+            IActionResult result3 = await controller2.Create(new Account() { Id = 4, Name = "CheckingNew", SSN = "000-05-1120" });
             Assert.True((result3 as StatusCodeResult).StatusCode == 400);
 
         }
