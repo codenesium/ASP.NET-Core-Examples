@@ -112,7 +112,7 @@ namespace Chaos.Tests
         }
 
         [Fact]
-        public void Test_Account_Model_Validator_Empty_CustomerId()
+        public void Test_Account_Model_Validator_Empty_SSN()
         {
             Mock<IAccountRepositoryV5> repositoryMock = new Mock<IAccountRepositoryV5>();
 
@@ -128,7 +128,7 @@ namespace Chaos.Tests
         }
 
         [Fact]
-        public void Test_Account_Model_Validator_Valid_CustomerId()
+        public void Test_Account_Model_Validator_Valid_SSN()
         {
             Mock<IAccountRepositoryV5> repositoryMock = new Mock<IAccountRepositoryV5>();
 

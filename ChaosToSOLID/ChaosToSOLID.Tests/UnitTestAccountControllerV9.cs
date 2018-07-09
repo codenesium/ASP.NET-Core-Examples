@@ -308,7 +308,7 @@ namespace Chaos.Tests
 
 
         [Fact]
-        public void Test_ModelValidator_GlobalCustomerId_NotEmpty_Valid()
+        public void Test_ModelValidator_SSN_NotEmpty_Valid()
         {
             //setup
             Mock<IAccountRepositoryV9> repositoryMock = new Mock<IAccountRepositoryV9>();
@@ -320,7 +320,7 @@ namespace Chaos.Tests
         }
 
         [Fact]
-        public void Test_ModelValidator_GlobalCustomerId_NotEmpty_Invalid()
+        public void Test_ModelValidator_SSN_NotEmpty_Invalid()
         {
             //setup
             Mock<IAccountRepositoryV9> repositoryMock = new Mock<IAccountRepositoryV9>();
