@@ -145,7 +145,7 @@ namespace Chaos.Controllers
         /// <summary>
         /// This can only be tested in an integration test.
         /// </summary>
-        /// <param name="customerId"></param>
+        /// <param name="ssn"></param>
         /// <returns></returns>
         public async Task<bool> VerifyWithFBI(string ssn)
         {
